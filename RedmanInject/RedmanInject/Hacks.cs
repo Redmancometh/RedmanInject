@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Reflection;
 using System.Collections;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
+using System.Reflection;
 
 public class Hacks : MonoBehaviour
 {
@@ -22,35 +22,27 @@ public class Hacks : MonoBehaviour
 	private MonoBehaviour[] players;
 	private MonoBehaviour[] vehicles;
 	//Players
-	public static string fieldNetworkUserList = System.Text.Encoding.Default.GetString(new byte[] { 0xE0, 0xA1, 0xB2 });
-	public static string fieldNetworkPlayerFromNetworkUser = System.Text.Encoding.Default.GetString(new byte[] { 0xE0, 0xA1, 0x83 });
-	public static string fieldSpawnPlayerInstance = System.Text.Encoding.Default.GetString(new byte[] {
-		0xE0,
-		0xA3,
-		0x8C
-	});
-	public static string fieldNetworkUserGameObject = System.Text.Encoding.Default.GetString(new byte[] {
-		0xE0,
-		0xA1,
-		0x82
-	});
-	public static string fieldEquipmentFromPlayer = System.Text.Encoding.Default.GetString(new byte[] {0xE0, 0xA3, 0x83});
-	public static string fieldIDFromNetworkUser = System.Text.Encoding.Default.GetString(new byte[] {0xE0, 0xA2, 0xBD});
-	public static string fieldNetworkUserFromPlayer = System.Text.Encoding.Default.GetString(new byte[] {0xE0, 0xA2, 0x86});
+    public static string fieldNetworkUserList = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa2, 0x8e });
+    public static string fieldNetworkPlayerFromNetworkUser = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa2, 0xbF });
+    public static string fieldSpawnPlayerInstance = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa3, 0xb8 });
+    public static string fieldNetworkUserGameObject = System.Text.Encoding.Default.GetString(new byte[] { 0xc2, 0x83 });
+    public static string fieldEquipmentFromPlayer = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa2, 0xb9 });
+    public static string fieldIDFromNetworkUser = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa3, 0xb2 });
+    public static string fieldNetworkUserFromPlayer = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa0, 0x8b });
 
-	public static string fieldInventoryPlayer = System.Text.Encoding.Default.GetString(new byte[] { 0xE0, 0xA1, 0xAE });
-//Chat
-	public static string fieldOneNetworkChat = System.Text.Encoding.Default.GetString(new byte[] { 0xC2, 0x94 });
-//Vehicles
-	public static string fieldVehicleList = System.Text.Encoding.Default.GetString(new byte[] { 0xE0, 0xA2, 0x96 });
-	public static string fieldVehiclePassengers = System.Text.Encoding.Default.GetString(new byte[] { 0xE0, 0xA3, 0x9F });
-	public static string fieldPlayerVehicle = System.Text.Encoding.Default.GetString(new byte[] {0x10});
-	public static string fieldPlayerLife = System.Text.Encoding.Default.GetString(new byte[] {0xE0, 0xA2, 0x91});
-	public static string fieldVehicleHealth = System.Text.Encoding.Default.GetString(new byte[] {0xE0, 0xA2, 0xBC});
-	public static string methodSetWrecked = System.Text.Encoding.Default.GetString(new byte[] {0xE0, 0xA0, 0x89});
-//Barricades
-	public static string methodSpawnBarricade = System.Text.Encoding.Default.GetString(new byte[] {0x18});
-	public static string fieldObjectStructure = System.Text.Encoding.Default.GetString(new byte[] {0xE0, 0xA2, 0xB2});
+    public static string fieldInventoryPlayer = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa0, 0xac });
+    //Chat
+    public static string fieldNetworkChatLastSaid = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa3, 0x82 });
+    //Vehicles
+    public static string fieldVehicleList = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa1, 0xb7 });
+    public static string fieldVehiclePassengers = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa1, 0xb9 });
+    public static string fieldPlayerVehicle = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa1, 0x89 });
+    public static string fieldPlayerLife = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa0, 0x9a });
+    public static string fieldVehicleHealth = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa2, 0x82 });
+    //public static string methodSetWrecked = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa2, 0x9c });
+    //Barricades
+    //public static string methodSpawnBarricade = "";
+    public static string fieldObjectStructure = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa2, 0xb0 });
 
 	private int playerSelected = 0;
 	private bool hitinsert = false;
@@ -58,21 +50,6 @@ public class Hacks : MonoBehaviour
 	private string s;
 	private string id;
 	Stopwatch stopwatch = new Stopwatch();
-
-	private void DrawLabel(Vector3 point, string label, float d2)
-	{
-		Vector2 vector = Camera.main.WorldToScreenPoint(point);
-		float num = this.distanceCalc(point);
-		if (d2 > num)
-		{
-			GUI.Label(new Rect(vector.x - 50f, this.scrHeight - vector.y, 100f, 70f), label);
-		}
-	}
-
-	private float distanceCalc(Vector3 point)
-	{
-		return Vector3.Distance(Camera.main.transform.position, point);
-	}
 
 	static MethodBase sendChat = typeof(NetworkChat).GetMethod("sendChat");
 
@@ -83,6 +60,7 @@ public class Hacks : MonoBehaviour
 
 	private void Start()
 	{
+        dumpMethodsAndFields();
 		//sw = File.CreateText(path);
 		HostData[] array = MasterServer.PollHostList();
 		HostData[] array2 = array;
@@ -102,34 +80,15 @@ public class Hacks : MonoBehaviour
 
 	private void Update()
 	{
-		Application.targetFrameRate = 20;
+		Application.targetFrameRate = 120;
 		if (Input.GetKeyDown("9") || Input.GetKeyDown("insert"))
 		{
 			if(!hitinsert){hitinsert = true;}
 			else{hitinsert=false;}
-			FieldInfo[] fi = typeof(NetworkUser).GetFields();
-			string path = @"C:\Users\Public\Desktop\Fields.txt";
-			if (File.Exists(path))
-			{
-				File.Delete(path);
-			}
-			TextWriter tw = new StreamWriter(path, true);
-			for (int x = 0; x < fi.Length; x++)
-			{
-				string name = fi[x].Name.ToString();
-				byte[] nameBytes = System.Text.Encoding.Default.GetBytes(name);
-				tw.Write(name + ": ");
-				for (int i = 0; i < nameBytes.Length; i++)
-				{
-					tw.Write(String.Format("{0:X} ", nameBytes[i]));
-				}
-				tw.WriteLine();
-			}
-			tw.Close();
 		}
-		if (s != (string)typeof(NetworkChat).GetField(fieldOneNetworkChat).GetValue(null).ToString())
+		if (s != (string)typeof(NetworkChat).GetField(fieldNetworkChatLastSaid).GetValue(null).ToString())
 		{
-			s = (string)typeof(NetworkChat).GetField(fieldOneNetworkChat).GetValue(null).ToString();
+            s = (string)typeof(NetworkChat).GetField(fieldNetworkChatLastSaid).GetValue(null).ToString();
 			if (s.Contains("nig"))
 			{
 			
@@ -160,12 +119,15 @@ public class Hacks : MonoBehaviour
 					}
 
 				}
-				s = (string)typeof(NetworkChat).GetField(fieldOneNetworkChat).GetValue(null).ToString();
-			} catch (Exception e)
+                s = (string)typeof(NetworkChat).GetField(fieldNetworkChatLastSaid).GetValue(null).ToString();
+			}
+            catch (Exception e)
 			{
 				string path = @"C:\Users\Public\Desktop\Failures.txt";
+                File.Delete(path);
 				TextWriter tw = new StreamWriter(path, true);
-				tw.Write(e.StackTrace);
+				tw.WriteLine(e.GetType());
+                tw.WriteLine(e.StackTrace);
 				tw.Close();
 			}
 			if (GUI.Button(new Rect(400f, 0, 100f, 20f), "Zombie Panic"))
@@ -175,32 +137,35 @@ public class Hacks : MonoBehaviour
 					typeof(SpawnAnimals).GetMethod("spawn").Invoke(null, null);
 				}
 			}
-			if (GUI.Button(new Rect(400f, 20f, 250f, 20f), "Spawn Item For: " + players[playerSelected].name))
+
+            bool canIndexPlayer = true;//playerSelected < players.Length && players[playerSelected] != null;
+
+            if (GUI.Button(new Rect(400f, 20f, 250f, 20f), "Spawn Item For Player") && canIndexPlayer)
 			{
 				object inv = typeof(Player).GetField(fieldInventoryPlayer).GetValue(players[playerSelected]);
 				typeof(SpawnItems).GetMethod("spawnItem").Invoke(null, new object[] {int.Parse(itemID),1,players[playerSelected].transform.position});
 			}
-			if (GUI.Button(new Rect(400f, 40f, 250f, 20f), "Spawn Vehicle For: " + players[playerSelected].name))
+            if (GUI.Button(new Rect(400f, 40f, 250f, 20f), "Spawn Vehicle For Player") && canIndexPlayer)
 			{
 					string name = itemID + UnityEngine.Random.Range(0, 2);
 					//SpawnVehicles.create(itemID + UnityEngine.Random.Range(0, 2), 100, 100, players[playerSelected].transform.position + Vector3.back, base.transform.rotation * Quaternion.Euler(-90f, 0f, 0f), new Color(1f, 1f, 1f));
 					GameObject gameObject = (GameObject)Network.Instantiate(Resources.Load("Prefabs/Vehicles/" + name),players[playerSelected].transform.position, base.transform.rotation * Quaternion.Euler(-90f, 0f, 0f), 0);
 					Vehicle vehicle = gameObject.GetComponent<Vehicle>();
 					gameObject.name = name;
-					getVehicleList().Add(vehicle);
-					typeof(Vehicle).GetMethod(methodSetWrecked).Invoke(vehicle, new object[]{false});
+					getVehicleList().Add(gameObject);
+					//typeof(Vehicle).GetMethod(methodSetWrecked).Invoke(vehicle, new object[]{false});
 			}
-			if (GUI.Button(new Rect(400f, 60f, 250f, 20f), "Fill Vehicle For: " + players[playerSelected].name))
+            if (GUI.Button(new Rect(400f, 60f, 250f, 20f), "Fill Vehicle For Player") && canIndexPlayer)
 			{
 				Vehicle vehicle = (Vehicle)typeof(Player).GetField(fieldPlayerVehicle).GetValue(players[playerSelected]);
 				vehicle.fill(100);
 			}
 			if (GUI.Button(new Rect(400f, 80f, 250f, 20f), "Barricade"))
 			{
-				ExplosionTool.explode(players[playerSelected].transform.position, 20f, -20);
+				/*ExplosionTool.explode(players[playerSelected].transform.position, 20f, -20);
 				GameObject soj = (GameObject)typeof(SpawnStructure).GetField(fieldObjectStructure).GetValue(null);
 
-				SpawnStructures.placeStructure(100, );
+				SpawnStructures.placeStructure(100, );*/
 			}
 			if(id!=null)
 			{
@@ -220,37 +185,6 @@ public class Hacks : MonoBehaviour
 			//this.haschatted=false;
 
 		}
-
-		// get all public static methods of MyClass type
-		/*				try
-		{
-			MethodBase m  = typeof(NetworkChat).GetMethod(s);
-			ParameterInfo[] parameterInfos = m.GetParameters();
-			GUI.Label(new Rect(200f, 40f, 200f, 40f), parameterInfos.Length.ToString());
-		}
-		catch(Exception e)
-		{
-			GUI.Label(new Rect(200f, 40f, 200f, 40f), e.GetType().FullName);
-		}*/
-		/*Array.Sort(methodInfos,
-		delegate(MethodInfo methodInfo1, MethodInfo methodInfo2)
-		{
-			return methodInfo1.Name.CompareTo(methodInfo2.Name); 
-		});
-// write method names	
-		int x = 0;
-		foreach (MethodInfo methodInfo in methodInfos)
-		{
-			//sw.WriteLine(methodInfo.Name);
-			GUI.Label(new Rect(200f, x+200, 200f, 40f), methodInfo.Name);
-			ParameterInfo[] parameterInfos = methodInfo.GetParameters();
-			/*						foreach(ParameterInfo parameterInfo in parameterInfos)
-			{
-				GUI.Label(new Rect(400f, x+200, 200f, 60f), methodInfo.GetParameters());
-			}
-			sw.Close();*/
-			/*x+=15;
-		}*/
 	}
 
 	public Array getNetworkUserList()
@@ -258,11 +192,11 @@ public class Hacks : MonoBehaviour
 		FieldInfo fieldnu = typeof(NetworkUserList).GetField(fieldNetworkUserList);
 		object gl = fieldnu.GetValue(null);
 		Type listType = gl.GetType();
-		return (Array)listType.GetMethod("ToArray").Invoke(gl, null);
+        return (Array)listType.GetMethod("ToArray").Invoke(gl, null);
 	}
-	public List<Vehicle> getVehicleList()
+	public List<GameObject> getVehicleList()
 	{
-		return (List<Vehicle>) typeof(SpawnVehicles).GetField(fieldVehicleList).GetValue(null);
+		return (List<GameObject>) typeof(SpawnVehicles).GetField(fieldVehicleList).GetValue(null);
 	}
 	public MethodBase UKNetworkChatMethod()
 	{
@@ -281,5 +215,57 @@ public class Hacks : MonoBehaviour
 		object[] o = new object[]{ message };
 		typeof(NetworkChat).GetMethod("sendChat").Invoke(null, o);
 	}
+
+    // Use this to make life 30% easier.
+    private static void dumpMethodsAndFields()
+    {
+        string path = @"C:\Users\James\data\names.txt";
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+        TextWriter tw = new StreamWriter(path, true);
+        try
+        {
+            Type[] types = Assembly.GetAssembly(typeof(Player)).GetTypes();
+            foreach (Type type in types)
+            {
+                tw.WriteLine("\nClass " + type.Name + "\n\nFields:");
+                FieldInfo[] fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly);
+                foreach (FieldInfo fi in fields)
+                {
+                    string name = fi.Name;
+                    byte[] nameBytes = System.Text.Encoding.Default.GetBytes(name);
+                    tw.Write(fi.FieldType + " " + name + ": " + nameBytes[0]);
+                    for (int i = 1; i < nameBytes.Length; i++)
+                    {
+                        tw.Write(String.Format(", {0:x}", nameBytes[i]));
+                    }
+                    tw.WriteLine();
+                }
+                tw.WriteLine("\nMethods:");
+                MethodInfo[] methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly);
+                foreach (MethodInfo mi in methods)
+                {
+                    string name = mi.Name;
+                    byte[] nameBytes = System.Text.Encoding.Default.GetBytes(name);
+                    tw.Write(name + ": " + nameBytes[0]);
+                    for (int i = 0; i < name.Length; i++)
+                    {
+                        tw.Write(String.Format(", {0:x}", nameBytes[i]));
+                    }
+                    tw.WriteLine();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            tw.WriteLine(e.StackTrace);
+        }
+        finally
+        {
+            tw.Close();
+        }
+    }
 }
 

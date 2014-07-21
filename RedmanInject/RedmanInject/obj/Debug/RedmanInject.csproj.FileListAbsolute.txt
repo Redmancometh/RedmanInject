@@ -12,3 +12,15 @@ C:\Users\Administrator\Documents\RedmanInject\RedmanInject\bin\Debug\UnityScript
 C:\Users\Administrator\Documents\RedmanInject\RedmanInject\bin\Debug\Mono.Security.dll
 C:\Users\Administrator\Documents\RedmanInject\RedmanInject\obj\Debug\RedmanInject.dll
 C:\Users\Administrator\Documents\RedmanInject\RedmanInject\obj\Debug\RedmanInject.pdb
+C:\Users\James\projects\RedmanInject\RedmanInject\RedmanInject\bin\Debug\RedmanInject.dll
+C:\Users\James\projects\RedmanInject\RedmanInject\RedmanInject\bin\Debug\RedmanInject.pdb
+C:\Users\James\projects\RedmanInject\RedmanInject\RedmanInject\bin\Debug\NSpeex.dll
+C:\Users\James\projects\RedmanInject\RedmanInject\RedmanInject\bin\Debug\SteamworksManaged.dll
+C:\Users\James\projects\RedmanInject\RedmanInject\RedmanInject\bin\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\James\projects\RedmanInject\RedmanInject\RedmanInject\bin\Debug\Assembly-UnityScript-firstpass.dll
+C:\Users\James\projects\RedmanInject\RedmanInject\RedmanInject\bin\Debug\Boo.Lang.dll
+C:\Users\James\projects\RedmanInject\RedmanInject\RedmanInject\bin\Debug\UnityScript.Lang.dll
+C:\Users\James\projects\RedmanInject\RedmanInject\RedmanInject\bin\Debug\Mono.Security.dll
+C:\Users\James\projects\RedmanInject\RedmanInject\RedmanInject\obj\Debug\RedmanInject.csprojResolveAssemblyReference.cache
+C:\Users\James\projects\RedmanInject\RedmanInject\RedmanInject\obj\Debug\RedmanInject.dll
+C:\Users\James\projects\RedmanInject\RedmanInject\RedmanInject\obj\Debug\RedmanInject.pdb
