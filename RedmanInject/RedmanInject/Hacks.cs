@@ -103,33 +103,20 @@ public class Hacks : MonoBehaviour
 		if (hitinsert)
 		{
 			GUI.color = Color.magenta;
-			try
+			itemID = GUI.TextField(new Rect(0, 0, 100, 20), itemID, 25);
+			Array array = getNetworkUserList();
+			players = new MonoBehaviour[array.Length];
+			for (int x = 0; x < array.Length; x++)
 			{
-				itemID = GUI.TextField(new Rect(0, 0, 100, 20), itemID, 25);
-				Array array = getNetworkUserList();
-				players = new MonoBehaviour[array.Length];
-				for (int x = 0; x < array.Length; x++)
-				{
-					GameObject obj = (GameObject)typeof(NetworkUser).GetField(fieldNetworkUserGameObject).GetValue(array.GetValue(x));
-					MonoBehaviour player = obj.GetComponent<Player>();
-					players[x] = player;
-					if (GUI.Button(new Rect(100f, 0f + (x * 20), 130f, 20f), players[x].name))
-					{
-						playerSelected = x;
-					}
-
-				}
-                s = (string)typeof(NetworkChat).GetField(fieldNetworkChatLastSaid).GetValue(null).ToString();
+                GameObject obj = (GameObject)typeof(NetworkUser).GetField(fieldNetworkUserGameObject).GetValue(array.GetValue(x));
+                MonoBehaviour player = obj.GetComponent<Player>();
+                players[x] = player;
+                if (GUI.Button(new Rect(100f, 0f + (x * 20), 130f, 20f), players[x].name))
+                {
+                    playerSelected = x;
+                }
 			}
-            catch (Exception e)
-			{
-				string path = @"C:\Users\Public\Desktop\Failures.txt";
-                File.Delete(path);
-				TextWriter tw = new StreamWriter(path, true);
-				tw.WriteLine(e.GetType());
-                tw.WriteLine(e.StackTrace);
-				tw.Close();
-			}
+            s = (string)typeof(NetworkChat).GetField(fieldNetworkChatLastSaid).GetValue(null).ToString();
 			if (GUI.Button(new Rect(400f, 0, 100f, 20f), "Zombie Panic"))
 			{
 				for (int x = 0; x < 15; x++)
@@ -236,10 +223,18 @@ public class Hacks : MonoBehaviour
                 {
                     string name = fi.Name;
                     byte[] nameBytes = System.Text.Encoding.Default.GetBytes(name);
-                    tw.Write(fi.FieldType + " " + name + ": " + nameBytes[0]);
-                    for (int i = 1; i < nameBytes.Length; i++)
+                    tw.Write(fi.FieldType + " " + name + ": ");
+                    if (nameBytes.Length != 0)
                     {
-                        tw.Write(String.Format(", {0:x}", nameBytes[i]));
+                        tw.Write(String.Format("{0:x}", nameBytes[0]));
+                        for (int i = 1; i < nameBytes.Length; i++)
+                        {
+                            tw.Write(String.Format(", {0:x}", nameBytes[i]));
+                        }
+                    }
+                    else
+                    {
+                        tw.Write("LENGTHZERO");
                     }
                     tw.WriteLine();
                 }
@@ -260,12 +255,23 @@ public class Hacks : MonoBehaviour
         }
         catch (Exception e)
         {
+            tw.WriteLine(e.GetType());
             tw.WriteLine(e.StackTrace);
         }
         finally
         {
             tw.Close();
         }
+    }
+
+    private static void printError(Exception e)
+    {
+		string path = @"C:\Users\Public\Desktop\Failures.txt";
+        File.Delete(path);
+		TextWriter tw = new StreamWriter(path, true);
+		tw.WriteLine(e.GetType());
+        tw.WriteLine(e.StackTrace);
+		tw.Close();
     }
 }
 
