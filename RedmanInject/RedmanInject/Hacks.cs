@@ -21,6 +21,9 @@ public class Hacks : MonoBehaviour
 	//StreamWriter sw;
 	private MonoBehaviour[] players;
 	private MonoBehaviour[] vehicles;
+
+    private DeobfuscatedMembers deobMems;
+
 	//Players
     public static string fieldNetworkUserList = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa2, 0x8e });
     public static string fieldNetworkPlayerFromNetworkUser = System.Text.Encoding.Default.GetString(new byte[] { 0xe0, 0xa2, 0xbF });
@@ -61,6 +64,14 @@ public class Hacks : MonoBehaviour
 	private void Start()
 	{
         dumpMethodsAndFields();
+        try
+        {
+            deobMems = Deobfuscator.deobfuscate(Assembly.GetAssembly(typeof(Player)));
+        }
+        catch (Exception e)
+        {
+            //printError(e);
+        }
 		//sw = File.CreateText(path);
 		HostData[] array = MasterServer.PollHostList();
 		HostData[] array2 = array;
@@ -104,7 +115,7 @@ public class Hacks : MonoBehaviour
 		{
 			GUI.color = Color.magenta;
 			itemID = GUI.TextField(new Rect(0, 0, 100, 20), itemID, 25);
-			Array array = getNetworkUserList();
+			Array array = deobMems.getNetworkUserList().ToArray();//getNetworkUserList();
 			players = new MonoBehaviour[array.Length];
 			for (int x = 0; x < array.Length; x++)
 			{
@@ -147,12 +158,9 @@ public class Hacks : MonoBehaviour
 				Vehicle vehicle = (Vehicle)typeof(Player).GetField(fieldPlayerVehicle).GetValue(players[playerSelected]);
 				vehicle.fill(100);
 			}
-			if (GUI.Button(new Rect(400f, 80f, 250f, 20f), "Barricade"))
+			if (GUI .Button(new Rect(400f, 80f, 250f, 20f), "Explode Player"))
 			{
-				/*ExplosionTool.explode(players[playerSelected].transform.position, 20f, -20);
-				GameObject soj = (GameObject)typeof(SpawnStructure).GetField(fieldObjectStructure).GetValue(null);
-
-				SpawnStructures.placeStructure(100, );*/
+				ExplosionTool.explode(players[playerSelected].transform.position, 20f, 100);
 			}
 			if(id!=null)
 			{
@@ -264,14 +272,22 @@ public class Hacks : MonoBehaviour
         }
     }
 
-    private static void printError(Exception e)
+    public static void printError(Exception e)
     {
 		string path = @"C:\Users\Public\Desktop\Failures.txt";
-        File.Delete(path);
+        //File.Delete(path);
 		TextWriter tw = new StreamWriter(path, true);
 		tw.WriteLine(e.GetType());
         tw.WriteLine(e.StackTrace);
 		tw.Close();
+    }
+
+    public static void print(string msg)
+    {
+        string path = @"C:\Users\Public\Desktop\Failures.txt";
+        TextWriter tw = new StreamWriter(path, true);
+        tw.WriteLine(msg);
+        tw.Close();
     }
 }
 
